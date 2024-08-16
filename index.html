@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Test API</title>
+</head>
+
+<body>
+    <button id="btnLogin">Login</button>
+    <button id="btnGetCentral">Get Central List</button>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var host = "https://devapi.cfibilling.com";
+        var cred = {
+            "cc": "P2",
+            "user": "API$APAY",
+            "password": "D2054E5E542A4C4FA948A01266"
+        };
+
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        async function login() {
+            try {
+                const fetchResult = await fetch(host + "/login", {
+                    method: 'POST',
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(cred)
+                });
+                const returnResponse = await fetchResult.json();
+
+                if (fetchResult.ok) {
+                    var token = returnResponse.login_response.token;
+
+                    console.log("API Endpoint: login");
+                    console.log("token: " + token);
+
+                    // Save token as a cookie
+                    setCookie('SESSIONID', token, 1); // Expires in 1 day or adjust as needed
+                } else {
+                    console.log("Error: " + returnResponse.message);
+                }
+            } catch (error) {
+                console.log("An error occurred during login:", error);
+            }
+        }
+
+        async function dbCentralList(payload) {
+            try {
+                const fetchResult = await fetch(host + "/dbCentralList", {
+                    method: 'POST',
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                        // No need to manually add the cookie, it will be sent automatically
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const returnResponse = await fetchResult.json();
+
+                if (fetchResult.ok) {
+                    console.log("API Endpoint: dbCentralList");
+                    console.log(returnResponse.dbCentralList_response);
+                } else {
+                    console.log("Error: " + returnResponse.message);
+                }
+            } catch (error) {
+                console.log("An error occurred while fetching the central list:", error);
+            }
+        }
+
+        $(document).ready(function () {
+            $("#btnLogin").click(async function (e) {
+                await login();
+            });
+
+            $("#btnGetCentral").click(async function (e) {
+                // The cookie will be automatically included in this request by the browser
+                await dbCentralList({});
+            });
+        });
+    </script>
+</body>
+
+</html>
