@@ -20,14 +20,14 @@
             "password": "D2054E5E542A4C4FA948A01266"
         };
 
-        function setCookie(name, value, days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        // Save token to localStorage
+        function saveToken(token) {
+            localStorage.setItem('tokenAPI', token);
+        }
+
+        // Get token from localStorage
+        function getToken() {
+            return localStorage.getItem('tokenAPI');
         }
 
         async function login() {
@@ -36,9 +36,7 @@
                     method: 'POST',
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Accept-Encoding": "*",
-                        "Content-Type": "application/json",
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify(cred)
                 });
@@ -49,9 +47,10 @@
 
                     console.log("API Endpoint: login");
                     console.log("token: " + token);
+                    console.log({ returnResponse });
 
-                    // Save token as a cookie
-                    setCookie('SESSIONID', token, 1); // Expires in 1 day or adjust as needed
+                    // Save token to localStorage
+                    saveToken(token);
                 } else {
                     console.log("Error: " + returnResponse.message);
                 }
@@ -62,14 +61,15 @@
 
         async function dbCentralList(payload) {
             try {
+                console.log({ toke: getToken() })
                 const fetchResult = await fetch(host + "/dbCentralList", {
                     method: 'POST',
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
+                        Cookie: `SESSIONID=${getToken()}`,
                         "Accept-Encoding": "*",
                         "Content-Type": "application/json",
-                        // No need to manually add the cookie, it will be sent automatically
                     },
                     body: JSON.stringify(payload)
                 });
@@ -92,7 +92,6 @@
             });
 
             $("#btnGetCentral").click(async function (e) {
-                // The cookie will be automatically included in this request by the browser
                 await dbCentralList({});
             });
         });
