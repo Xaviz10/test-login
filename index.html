@@ -34,11 +34,10 @@
             try {
                 const fetchResult = await fetch(host + "/login", {
                     method: 'POST',
-                    credentials: 'include',
+                    credentials: 'same-origin',
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Accept-Encoding": "*",
                     },
                     body: JSON.stringify(cred)
                 });
@@ -66,12 +65,10 @@
                 console.log({ toke: getToken() })
                 const fetchResult = await fetch(host + "/dbCentralList", {
                     method: 'POST',
-                    credentials: 'include',
+                    credentials: 'same-origin',
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Accept-Encoding": "*",
-
                     },
                     body: JSON.stringify(payload)
                 });
