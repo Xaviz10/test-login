@@ -36,7 +36,9 @@
                     method: 'POST',
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Accept-Encoding": "*",
+                        "Content-Type": "application/json",
                     },
                     body: JSON.stringify(cred)
                 });
@@ -64,7 +66,9 @@
                     method: 'POST',
                     headers: {
                         "Accept": "application/json",
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Accept-Encoding": "*",
+                        "Content-Type": "application/json",
                         // No need to manually add the cookie, it will be sent automatically
                     },
                     body: JSON.stringify(payload)
