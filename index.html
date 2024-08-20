@@ -40,7 +40,6 @@
                         "Accept-Encoding": "*",
                     },
                     body: JSON.stringify(cred)
-                    credentials: 'include',  // Change to 'include'
                 });
                 const returnResponse = await fetchResult.json();
 
@@ -72,7 +71,6 @@
                         "Accept-Encoding": "*",
                     },
                     body: JSON.stringify(payload)
-                    credentials: 'include', 
                 });
                 const returnResponse = await fetchResult.json();
 
