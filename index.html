@@ -9,7 +9,7 @@
 <body>
     <button id="btnLogin">Login</button>
     <button id="btnGetCentral">Get Central List</button>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -32,7 +32,7 @@
 
         async function login() {
             try {
-                const fetchResult = await fetch(host + "/login", {
+                const fetchResult = await axios(host + "/login", {
                     method: 'POST',
                     headers: {
                         "Accept": "application/json",
@@ -63,7 +63,7 @@
         async function dbCentralList(payload) {
             try {
                 console.log({ toke: getToken() })
-                const fetchResult = await fetch(host + "/dbCentralList", {
+                const fetchResult = await axios(host + "/dbCentralList", {
                     method: 'POST',
                     headers: {
                         "Accept": "application/json",
