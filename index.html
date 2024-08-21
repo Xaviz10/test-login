@@ -10,91 +10,42 @@
     <button id="btnLogin">Login</button>
     <button id="btnGetCentral">Get Central List</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        var host = "https://devapi.cfibilling.com";
-        var cred = {
-            "cc": "P2",
-            "user": "API$APAY",
-            "password": "D2054E5E542A4C4FA948A01266"
-        };
-
-        // Save token to localStorage
-        function saveToken(token) {
-            localStorage.setItem('tokenAPI', token);
-        }
-
-        // Get token from localStorage
-        function getToken() {
-            return localStorage.getItem('tokenAPI');
-        }
+        const instance = axios.create({
+            baseURL: 'https://devapi.cfibilling.com', // Base URL for your API
+            withCredentials: true // Ensures cookies are sent with the request
+        });
 
         async function login() {
             try {
-                const fetchResult = await axios(host + "/login", {
-                    method: 'POST',
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Accept-Encoding": "*",
-                    },
-                    body: JSON.stringify(cred)
+                const response = await instance.post('/login', {
+                    cc: 'EZ',
+                    user: 'API$EZtest',
+                    password: 'Cust0mR3po'
                 });
-                const returnResponse = await fetchResult.json();
 
-                if (fetchResult.ok) {
-                    var token = returnResponse.login_response.token;
-
-                    console.log("API Endpoint: login");
-                    console.log("token: " + token);
-                    console.log({ returnResponse });
-
-                    // Save token to localStorage
-                    saveToken(token);
-                } else {
-                    console.log("Error: " + returnResponse.message);
-                }
+                console.log("Login successful");
+                console.log(response.data);
             } catch (error) {
-                console.log("An error occurred during login:", error);
+                console.error("Error during login", error.response?.data || error.message);
             }
         }
 
-        async function dbCentralList(payload) {
+        async function getCentralList() {
             try {
-                console.log({ toke: getToken() })
-                const fetchResult = await axios(host + "/dbCentralList", {
-                    method: 'POST',
-                    headers: {
-                        "Accept": "application/json",
-                        "Cookie": `SESSIONID=${getToken()}`,
-                        "Content-Type": "application/json",
-                        "Accept-Encoding": "*",
-                    },
-                    body: JSON.stringify(payload)
-                });
-                const returnResponse = await fetchResult.json();
-
-                if (fetchResult.ok) {
-                    console.log("API Endpoint: dbCentralList");
-                    console.log(returnResponse.dbCentralList_response);
-                } else {
-                    console.log("Error: " + returnResponse.message);
-                }
+                const response = await instance.post('/dbCentralList', {});
+                console.log("Central list retrieved", response.data);
             } catch (error) {
-                console.log("An error occurred while fetching the central list:", error);
+                console.error("Error fetching central list", error.response?.data || error.message);
             }
         }
 
+        document.getElementById('btnLogin').addEventListener('click', async () => {
+            await login();
+        });
 
-        $(document).ready(function () {
-            $("#btnLogin").click(async function (e) {
-                await login();
-            });
-
-            $("#btnGetCentral").click(async function (e) {
-                await dbCentralList({});
-            });
+        document.getElementById('btnGetCentral').addEventListener('click', async () => {
+            await getCentralList();
         });
     </script>
 </body>
