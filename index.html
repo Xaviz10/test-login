@@ -33,7 +33,7 @@
 
         async function getCentralList() {
             try {
-                const response = await instance.post('/dbCentralList', {});
+                const response = await instance.post('/dbCentralList', {},{withCredentials: true});
                 console.log("Central list retrieved", response.data);
             } catch (error) {
                 console.error("Error fetching central list", error.response?.data || error.message);
