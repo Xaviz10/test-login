@@ -8,9 +8,11 @@
 
 <body>
     <button id="btnLogin">Login</button>
-    <button id="btnGetCentral">Get Central List</button>
+    <button id="btnGetCentral">Get Techs List</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
     <script type="text/javascript">
+        let idToken = '';
+
         const instance = axios.create({
             baseURL: 'https://zpyc7cye89.execute-api.us-east-1.amazonaws.com/prod'
         });
@@ -23,7 +25,9 @@
                     password: 'w1GFVb7VPo'
                 });
 
-                console.log("Login successful");
+                // Save the idToken from the response
+                idToken = response.data.idToken;
+                console.log("Login successful, token saved");
                 console.log(response.data);
             } catch (error) {
                 console.error("Error during login", error.response?.data || error.message);
@@ -32,7 +36,11 @@
 
         async function getCentralList() {
             try {
-                const response = await instance.post('/techs', {},{withCredentials: true});
+                const response = await instance.post('/techs', {}, {
+                    headers: {
+                        Authorization: `Bearer ${idToken}`
+                    }
+                });
                 console.log("Central list retrieved", response.data);
             } catch (error) {
                 console.error("Error fetching central list", error.response?.data || error.message);
@@ -44,7 +52,11 @@
         });
 
         document.getElementById('btnGetCentral').addEventListener('click', async () => {
-            await getCentralList();
+            if (!idToken) {
+                console.error("You must log in first.");
+            } else {
+                await getCentralList();
+            }
         });
     </script>
 </body>
