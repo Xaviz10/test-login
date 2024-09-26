@@ -36,7 +36,7 @@
 
         async function getCentralList() {
             try {
-                const response = await instance.post('/techs', {}, {
+                const response = await instance.get('/techs', {}, {
                     headers: {
                         Authorization: `Bearer ${idToken}`
                     }
