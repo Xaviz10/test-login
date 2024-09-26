@@ -28,6 +28,7 @@
                 localStorage.setItem('idToken', idToken);
 
                 console.log("Login successful. Token saved to local storage.");
+                instance.defaults.headers.common['Authorization'] = `Bearer ${idToken}`;
                 console.log(response.data);
             } catch (error) {
                 console.error("Error during login", error.response?.data || error.message);
@@ -38,7 +39,7 @@
             try {
                 // Retrieve the idToken from localStorage
                 const idToken = localStorage.getItem('idToken');
-
+                console.log({idToken});
                 if (!idToken) {
                     console.error("No token found. Please login first.");
                     return;
@@ -48,11 +49,7 @@
                 const response = await instance.get(
                     '/techs',
                     {},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${idToken}`
-                        }
-                    }
+                     { withCredentials: true }
                 );
 
                 console.log("Central list retrieved", response.data);
