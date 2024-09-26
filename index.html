@@ -48,8 +48,7 @@
                 // Set the Authorization header with the retrieved token
                 const response = await instance.get(
                     '/techs',
-                    {},
-                     { withCredentials: true }
+                    {}
                 );
 
                 console.log("Central list retrieved", response.data);
